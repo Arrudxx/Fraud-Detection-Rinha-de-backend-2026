@@ -32,3 +32,13 @@ type FraudScoreResponse struct {
 	Aprrove     bool    `json:"approve"`
 	Fraud_score float64 `json:"fraud_score"`
 }
+
+type FraudScoreConfig struct {
+	MaxAmount            float64 `json:"max_amount"`
+	MaxInstallments      int     `json:"max_installments"`
+	AmountVsAvgRatio     float64 `json:"amount_vs_avg_ratio"`
+	MaxMinutes           int     `json:"max_minutes"`
+	MaxKm                float64 `json:"max_km"`
+	MaxTxCount24h        int     `json:"max_tx_count_24h"`
+	MaxMerchantAvgAmount float64 `json:"max_merchant_avg_amount"`
+}

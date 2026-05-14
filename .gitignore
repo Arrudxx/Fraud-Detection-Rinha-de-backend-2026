@@ -30,3 +30,10 @@ go.work.sum
 # Editor/IDE
 # .idea/
 # .vscode/
+
+# Ignora temporary files
+/tmp
+
+# Ignora air logs
+air.log
+.air.toml
