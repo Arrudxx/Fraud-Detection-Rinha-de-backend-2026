@@ -41,6 +41,6 @@ func main() {
 	router.GET("/ready", api.Ready)
 	// Endpoint para calcular o score de fraude
 	router.POST("/fraud-score", api.FraudScore(index))
-	router.Run(":9999")
+	router.Run(":8080")
 
 }
