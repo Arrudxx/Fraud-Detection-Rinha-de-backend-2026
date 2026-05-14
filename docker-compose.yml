@@ -41,5 +41,5 @@ services:
           memory: 50MB
   
 networks:
-fraud-detection-network:
-  driver: bridge  
+  fraud-detection-network:
+    driver: bridge 
