@@ -1,46 +1,46 @@
+//go:build !windows
+
 package main
 
 import (
-	"encoding/json"
+	"fmt"
 	"fraud-detection/internal/api"
 	"fraud-detection/internal/scorer"
 	"log"
-	"os"
+	"runtime"
 
 	"github.com/gin-gonic/gin"
 )
 
+const (
+	jsonPath  = "/app/data/references.json"
+	binPath   = "/data/shared/dataset.bin"
+	sharedDir = "/data/shared"
+)
+
 func main() {
-
-	// 1. abre o arquivo
-	file, err := os.Open("data/references.json")
-	if err != nil {
-		log.Fatal("erro ao abrir references.json:", err)
-	}
-	defer file.Close()
-
-	// 2. lê e converte para []Reference
-	var refs []scorer.Reference
-	if err := json.NewDecoder(file).Decode(&refs); err != nil {
-		log.Fatal("erro ao decodificar references.json:", err)
+	// garante que o dataset.bin existe no volume compartilhado
+	if err := scorer.EnsureDatasetBin(jsonPath, binPath, sharedDir); err != nil {
+		log.Fatal("erro ao preparar dataset:", err)
 	}
 
-	log.Printf("%d referências carregadas na memória\n", len(refs))
-
-	// constrói o índice HNSW (pode levar 30-60s com 3M vetores)
-	log.Println("construindo índice HNSW...")
-	index, err := scorer.BuildIndex(refs)
+	// carrega o índice LSH via mmap
+	log.Println("carregando índice via mmap...")
+	index, err := scorer.LoadMmapIndex(binPath)
 	if err != nil {
-		log.Fatal("erro ao construir índice:", err)
+		log.Fatal("erro ao carregar índice:", err)
 	}
 	log.Println("índice pronto")
 
-	// Gin router
+	runtime.GC()
+
+	var mem runtime.MemStats
+	runtime.ReadMemStats(&mem)
+	fmt.Printf("memória usada: %v MB\n", mem.Alloc/1024/1024)
+	log.Printf("cores disponíveis: %d\n", runtime.NumCPU())
+
 	router := gin.Default()
-	// Endpoint health check
 	router.GET("/ready", api.Ready)
-	// Endpoint para calcular o score de fraude
 	router.POST("/fraud-score", api.FraudScore(index))
 	router.Run(":8080")
-
 }

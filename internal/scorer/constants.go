@@ -11,7 +11,7 @@ const (
 	MaxMerchantAvgAmount = 10000.0
 )
 
-var mccRiskScores = map[string]float64{
+var mccRiskScores = map[string]float32{
 	"5411": 0.15,
 	"5812": 0.30,
 	"5912": 0.20,
