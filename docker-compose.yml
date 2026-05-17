@@ -1,0 +1,54 @@
+services:
+
+  api1:
+    build: .
+    container_name: api1
+    volumes:
+      - dataset:/data/shared
+    networks:
+      - fraud-detection-network
+    deploy:
+      resources:
+        limits:
+          cpus: "0.45"
+          memory: 160MB
+
+  api2:
+    build: .
+    container_name: api2
+    volumes:
+      - dataset:/data/shared
+    networks:
+      - fraud-detection-network
+    deploy:
+      resources:
+        limits:
+          cpus: "0.45"
+          memory: 160MB
+
+  nginx:
+    image: nginx:alpine
+    container_name: nginx
+    restart: on-failure
+    ports:
+      - "9999:9999"
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+    networks:
+      - fraud-detection-network
+    depends_on:
+      - api1
+      - api2
+    deploy:
+      resources:
+        limits:
+          cpus: "0.1"
+          memory: 30MB
+
+volumes:
+  dataset:
+    driver: local
+
+networks:
+  fraud-detection-network:
+    driver: bridge
