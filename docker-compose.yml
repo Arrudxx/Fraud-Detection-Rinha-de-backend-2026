@@ -1,10 +1,9 @@
 services:
-
   api1:
-    build: .
+    image: ghcr.io/arrudxx/fraud-detection:latest  # imagem pré-buildada
     container_name: api1
     volumes:
-      - dataset:/data/shared
+      - ./resources:/app/resources:ro   # aqui a engine injeta o references.json.gz
     networks:
       - fraud-detection-network
     deploy:
@@ -14,10 +13,10 @@ services:
           memory: 160MB
 
   api2:
-    build: .
+    image: ghcr.io/arrudxx/fraud-detection:latest
     container_name: api2
     volumes:
-      - dataset:/data/shared
+      - ./resources:/app/resources:ro
     networks:
       - fraud-detection-network
     deploy:
@@ -44,10 +43,6 @@ services:
         limits:
           cpus: "0.1"
           memory: 30MB
-
-volumes:
-  dataset:
-    driver: local
 
 networks:
   fraud-detection-network:
