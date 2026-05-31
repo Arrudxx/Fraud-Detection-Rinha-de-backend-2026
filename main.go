@@ -13,9 +13,9 @@ import (
 )
 
 const (
-	jsonPath  = "/app/data/references.json"
-	binPath   = "/data/shared/dataset.bin"
-	sharedDir = "/data/shared"
+	jsonPath  = "/app/resources/references.json.gz"
+	binPath   = "/app/resources/dataset.bin"
+	sharedDir = "/app/resources"
 )
 
 func main() {
