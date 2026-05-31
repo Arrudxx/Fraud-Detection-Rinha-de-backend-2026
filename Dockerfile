@@ -24,9 +24,6 @@ WORKDIR /app
 # copia só o binário compilado da etapa anterior
 COPY --from=builder /app/fraud-detection .
 
-# copia o dataset
-COPY data/ ./data/
-
 #porta
 EXPOSE 8080
 

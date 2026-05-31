@@ -1,9 +1,10 @@
 services:
+
   api1:
-    image: ghcr.io/arrudxx/fraud-detection:latest  # imagem pré-buildada
+    build: .
     container_name: api1
     volumes:
-      - ./resources:/app/resources:ro   # aqui a engine injeta o references.json.gz
+      - ./resources:/app/resources:ro
     networks:
       - fraud-detection-network
     deploy:
@@ -13,7 +14,7 @@ services:
           memory: 160MB
 
   api2:
-    image: ghcr.io/arrudxx/fraud-detection:latest
+    build: .
     container_name: api2
     volumes:
       - ./resources:/app/resources:ro
